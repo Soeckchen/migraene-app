@@ -121,58 +121,62 @@
   </style>
 </head>
 
-<body>
+<body autocomplete="off">
   <main class="container">
     <h1>Migräne Check</h1>
 
-    <div class="question">
-      <label for="q1">1. Schmerzstärke</label>
-      <select id="q1">
-        <option value="0">Leicht</option>
-        <option value="1">Mittelstark</option>
-        <option value="2">Stark</option>
-      </select>
-    </div>
+    <form id="migraineForm" autocomplete="off">
 
-    <div class="question">
-      <label for="q2">2. Schmerzort</label>
-      <select id="q2">
-        <option value="0">Beidseitig / diffus</option>
-        <option value="2">Einseitig / lokal</option>
-      </select>
-    </div>
-
-    <div class="question">
-      <label for="q3">3. Schmerzcharakter</label>
-      <select id="q3">
-        <option value="0">Dumpf-drückend</option>
-        <option value="2">Pochend-pulsierend</option>
-      </select>
-    </div>
-
-    <div class="question">
-      <label>4. Verstärkung bei Aktivität</label>
-      <div class="checkbox-row">
-        <input type="checkbox" id="q4" />
-        <span>Ja</span>
+      <div class="question">
+        <label for="q1">1. Schmerzstärke</label>
+        <select id="q1">
+          <option value="0">Leicht</option>
+          <option value="1">Mittelstark</option>
+          <option value="2">Stark</option>
+        </select>
       </div>
-    </div>
 
-    <div class="question">
-      <label>5. Übelkeit / Erbrechen</label>
-      <div class="checkbox-row">
-        <input type="checkbox" id="q5" />
-        <span>Ja</span>
+      <div class="question">
+        <label for="q2">2. Schmerzort</label>
+        <select id="q2">
+          <option value="0">Beidseitig / diffus</option>
+          <option value="2">Einseitig / lokal</option>
+        </select>
       </div>
-    </div>
 
-    <div class="question">
-      <label>6. Licht-/Lärmempfindlichkeit</label>
-      <div class="checkbox-row">
-        <input type="checkbox" id="q6" />
-        <span>Ja</span>
+      <div class="question">
+        <label for="q3">3. Schmerzcharakter</label>
+        <select id="q3">
+          <option value="0">Dumpf-drückend</option>
+          <option value="2">Pochend-pulsierend</option>
+        </select>
       </div>
-    </div>
+
+      <div class="question">
+        <label>4. Verstärkung bei Aktivität</label>
+        <div class="checkbox-row">
+          <input type="checkbox" id="q4" />
+          <span>Ja</span>
+        </div>
+      </div>
+
+      <div class="question">
+        <label>5. Übelkeit / Erbrechen</label>
+        <div class="checkbox-row">
+          <input type="checkbox" id="q5" />
+          <span>Ja</span>
+        </div>
+      </div>
+
+      <div class="question">
+        <label>6. Licht-/Lärmempfindlichkeit</label>
+        <div class="checkbox-row">
+          <input type="checkbox" id="q6" />
+          <span>Ja</span>
+        </div>
+      </div>
+
+    </form>
 
     <div class="progress-container">
       <div id="bar" class="progress-bar"></div>
@@ -191,6 +195,26 @@
 
   <script>
     const elements = document.querySelectorAll("select, input");
+
+    // Formular bei jedem Laden zurücksetzen
+    window.addEventListener("load", () => {
+
+      // Formular vollständig zurücksetzen
+      document.getElementById("migraineForm").reset();
+
+      // Alle Selects auf erste Option setzen
+      document.querySelectorAll("select").forEach(select => {
+        select.selectedIndex = 0;
+      });
+
+      // Alle Checkboxen deaktivieren
+      document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.checked = false;
+      });
+
+      // UI zurücksetzen
+      calculateScore();
+    });
 
     function calculateScore() {
       let score = 0;
