@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Migräne Check</title>
+
+  <style>
+    :root {
+      --green: #22c55e;
+      --orange: #f59e0b;
+      --red: #ef4444;
+      --bg: #f5f5f5;
+      --card: #ffffff;
+      --text: #222;
+      --border: #ddd;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #111827;
+        --card: #1f2937;
+        --text: #f3f4f6;
+        --border: #374151;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 600px;
+      background: var(--card);
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .question {
+      margin-bottom: 24px;
+    }
+
+    .question label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    select,
+    input[type="checkbox"] {
+      font-size: 16px;
+    }
+
+    select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: white;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .progress-container {
+      width: 100%;
+      height: 24px;
+      background: #d1d5db;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 30px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--green);
+      transition: width 0.3s ease, background 0.3s ease;
+    }
+
+    .score {
+      margin-top: 16px;
+      font-size: 20px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .result {
+      margin-top: 12px;
+      text-align: center;
+      font-size: 18px;
+    }
+
+    footer {
+      margin-top: 30px;
+      font-size: 12px;
+      text-align: center;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+    <h1>Migräne Check</h1>
+
+    <div class="question">
+      <label for="q1">1. Schmerzstärke</label>
+      <select id="q1">
+        <option value="0">Leicht</option>
+        <option value="1">Mittelstark</option>
+        <option value="2">Stark</option>
+      </select>
+    </div>
+
+    <div class="question">
+      <label for="q2">2. Schmerzort</label>
+      <select id="q2">
+        <option value="0">Beidseitig / diffus</option>
+        <option value="2">Einseitig / lokal</option>
+      </select>
+    </div>
+
+    <div class="question">
+      <label for="q3">3. Schmerzcharakter</label>
+      <select id="q3">
+        <option value="0">Dumpf-drückend</option>
+        <option value="2">Pochend-pulsierend</option>
+      </select>
+    </div>
+
+    <div class="question">
+      <label>4. Verstärkung bei Aktivität</label>
+      <div class="checkbox-row">
+        <input type="checkbox" id="q4" />
+        <span>Ja</span>
+      </div>
+    </div>
+
+    <div class="question">
+      <label>5. Übelkeit / Erbrechen</label>
+      <div class="checkbox-row">
+        <input type="checkbox" id="q5" />
+        <span>Ja</span>
+      </div>
+    </div>
+
+    <div class="question">
+      <label>6. Licht-/Lärmempfindlichkeit</label>
+      <div class="checkbox-row">
+        <input type="checkbox" id="q6" />
+        <span>Ja</span>
+      </div>
+    </div>
+
+    <div class="progress-container">
+      <div id="bar" class="progress-bar"></div>
+    </div>
+
+    <div class="score" id="score">0 Punkte</div>
+
+    <div class="result" id="result">
+      Geringe Wahrscheinlichkeit für Migräne
+    </div>
+
+    <footer>
+      Hinweis: Dieser Fragebogen ersetzt keine medizinische Diagnose.
+    </footer>
+  </main>
+
+  <script>
+    const elements = document.querySelectorAll("select, input");
+
+    function calculateScore() {
+      let score = 0;
+
+      score += Number(document.getElementById("q1").value);
+      score += Number(document.getElementById("q2").value);
+      score += Number(document.getElementById("q3").value);
+
+      if (document.getElementById("q4").checked) score += 1;
+      if (document.getElementById("q5").checked) score += 2;
+      if (document.getElementById("q6").checked) score += 1;
+
+      updateUI(score);
+    }
+
+    function updateUI(score) {
+      const maxScore = 10;
+      const percent = (score / maxScore) * 100;
+
+      const bar = document.getElementById("bar");
+      const scoreText = document.getElementById("score");
+      const result = document.getElementById("result");
+
+      bar.style.width = `${percent}%`;
+
+      if (score <= 2) {
+        bar.style.background = "var(--green)";
+        result.textContent =
+          "Geringe Wahrscheinlichkeit für Migräne";
+      } else if (score <= 4) {
+        bar.style.background = "var(--orange)";
+        result.textContent =
+          "Mögliche Migräne-Symptomatik";
+      } else {
+        bar.style.background = "var(--red)";
+        result.textContent =
+          "Hohe Wahrscheinlichkeit für Migräne";
+      }
+
+      scoreText.textContent = `${score} Punkte`;
+    }
+
+    elements.forEach((el) => {
+      el.addEventListener("change", calculateScore);
+    });
+
+    calculateScore();
+  </script>
+</body>
+</html>
